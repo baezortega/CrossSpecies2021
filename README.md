@@ -18,7 +18,7 @@ If you use some of these methods for your own research, please use the following
 
 ### Set-up and requirements
 
-In order to run the scripts, the repository must first be cloned into a directory in your local machine (replace the destination path `~/Desktop/CrossSpecies2021` below with your own one). This can be done from the terminal using the command below.
+In order to run the scripts, the repository must first be cloned into a directory in your local machine (replace the destination path `~/Desktop/CrossSpecies2021` below with your own). This can be done from the terminal using the command below.
 
 ```
 git clone https://github.com/baezortega/CrossSpecies2021.git ~/Desktop/CrossSpecies2021
@@ -34,16 +34,16 @@ R --version
 The current R version is also shown when opening RStudio or the R Console.
 
 The scripts require the following R packages:  [**`bbmle`**](https://cran.r-project.org/web/packages/bbmle/index.html),  [**`Biostrings`**](https://bioconductor.org/packages/release/bioc/html/Biostrings.html),  [**`caper`**](https://cran.r-project.org/web/packages/caper/index.html), [**`dNdScv`**](https://github.com/im3sanger/dndscv),  [**`emdbook`**](https://cran.r-project.org/web/packages/emdbook/index.html), 
-[**`GenomicRanges`**](https://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html),  [**`MASS`**](https://cran.r-project.org/web/packages/MASS/index.html),  [**`nlme`**](https://cran.r-project.org/web/packages/nlme/index.html),  [**`RColorBrewer`**](https://cran.r-project.org/web/packages/RColorBrewer/index.html),  [**`scales`**](https://cran.r-project.org/web/packages/scales/index.html),  [**`sigfit`**](https://github.com/kgori/sigfit) **(v2.1)**, 
+[**`GenomicRanges`**](https://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html),  [**`MASS`**](https://cran.r-project.org/web/packages/MASS/index.html),  [**`nlme`**](https://cran.r-project.org/web/packages/nlme/index.html),  [**`RColorBrewer`**](https://cran.r-project.org/web/packages/RColorBrewer/index.html),  [**`scales`**](https://cran.r-project.org/web/packages/scales/index.html),  [**`sigfit` (>=2.1)**](https://github.com/kgori/sigfit), 
 [**`SigProfilerMatrixGeneratorR`**](https://github.com/AlexandrovLab/SigProfilerMatrixGeneratorR).
 
 In addition, note that [**Python 3**](https://www.python.org) and the Python package [**`SigProfilerMatrixGenerator`**](https://osf.io/s93d5/wiki/home/) are required before installing the `SigProfilerMatrixGeneratorR` R package, which is needed for one of the analysis steps below (Step 3). In addition, human, dog, mouse and rat reference genomes for `SigProfilerMatrixGenerator` need to be [installed manually](https://osf.io/s93d5/wiki/1.%20Installation%20-%20Python/). However, note that this particular step is not required for any subsequent data analyses, and so **can be omitted** if you encounter difficulties in installing Python 3 or `SigProfilerMatrixGenerator`. You should be able to check your current version of Python by running the command `python --version`.
 
-Although care has been taken to make the code distribution-independent, it is possible that some of the scripts only work on Unix/MacOS systems, and may need to be modified in order to run on Windows systems.
+Although care has been taken to make the code distribution-independent, some of the scripts may only work on Unix/MacOS systems, and may need to be modified in order to run on Windows systems.
 
 Please note that some of the scripts may take considerable time to run, and some of the intermediate files generated will occupy up to a few gigabytes.
 
-Finally, before running the steps indicated below, it is necessary to **open the terminal and navigate to the cloned directory**, `CrossSpecies2021`, using the command below (replace the path below with your own path).
+**Finally, before running the steps indicated below, it is necessary to open the terminal and navigate to the cloned directory, `CrossSpecies2021`, using the command below (replace the path below with your own).**
 
 ```
 cd ~/Desktop/CrossSpecies2021
@@ -134,7 +134,7 @@ Rscript scripts/3_Spectra_Indels.R
 
 This step infers mutational signatures from the catalogues of somatic substitutions in each species; performs a cross-species analysis of signature SBSB; and examines the prevalence of colibactin and APOBEC mutagenesis in non-human samples.
 
-* This step requires the `sigfit` R package.
+* This step requires the `sigfit` R package (v2.1 or higher).
 * This step requires data files produced in Steps 1 and 2.
 * The output of this step is required for subsequent steps.
 * The approximate run time of this step is **1.5 hours** (on 4 CPUs).
@@ -153,11 +153,11 @@ Rscript scripts/4_Signatures.R
 
 This step infers segments of total and allele-specific copy number for samples in species with chromosome-level genome assemblies.
 
-Note that this step takes a very long time to run. However, note that the output of this step is not required for subsequent analyses, and so it **can be omitted** if necessary.
+Note that this step takes a very long time to run. However, its output is not required for subsequent analyses, and so it **can be omitted** if necessary.
 
 * This step requires R packages `bbmle`, `emdbook`, `GenomicRanges` and `MASS`.
 * This step requires data files produced in Step 1.
-* The output of this step is *not* required for subsequent steps.
+* The output of this step is **not** required for subsequent steps.
 * The approximate run time of this step is **250 hours**.
 * The output files produced include plots and tables of copy number segments per sample (folder `output/Copy_Number`).
 
@@ -177,7 +177,7 @@ This step calculate the ratio between non-synonymous and synonymous mutation rat
 
 * This step requires R packages `dndscv` and `GenomicRanges`.
 * This step requires data files produced in Step 1.
-* The output of this step is *not* required for subsequent steps.
+* The output of this step is **not** required for subsequent steps.
 * The approximate run time of this step is **10 minutes**.
 * The output files produced include a plot of exome-wide dN/dS per species (`output/dNdS_Species.pdf`) and a table of coding mutation counts per sample (`output/Coding_Mutation_Counts.txt`).
 
