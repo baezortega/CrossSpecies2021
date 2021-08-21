@@ -343,6 +343,8 @@ species.data$Residuals_Lifespan_Mass = residuals(lm.allom.lifespan.mass)
 species.data$Residuals_Mass_Lifespan = residuals(lm.allom.mass.lifespan)
 species.data$Residuals_BMR_Mass =
     residuals(lm.allom.bmr.mass)[match(species.data$Species, names(residuals(lm.allom.bmr.mass)))]
+indiv.data$Residuals_BMR_Mass =
+    species.data$Residuals_BMR_Mass[match(indiv.data$Species, species.data$Species)]
 sample.data$Residuals_BMR_Mass =
     species.data$Residuals_BMR_Mass[match(sample.data$Species, species.data$Species)]
 

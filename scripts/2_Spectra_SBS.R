@@ -25,7 +25,7 @@
 #
 #    setwd("path/to/CrossSpecies2021")
 #
-# (In the event that there is insufficient memory, see non-interactive alternative above)
+# (In the event that memory is insufficient, see non-interactive alternative above)
 
 
 # If the paths to the input or output files differ from the ones

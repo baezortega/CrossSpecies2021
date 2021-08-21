@@ -57,7 +57,7 @@ Before commencing the analyses, this script initialise the directory structure, 
 
 * This step uses the `curl` command and requires Internet access.
 * The output of this step is required for subsequent steps.
-* The approximate run time of this step is **30 minutes**.
+* The estimated run time of this step is **30 minutes**.
 * The output files produced include all the necessary data files (`data/original` folder).
 
 This step is performed by the R script `0_Setup.sh`, which is located in the [`scripts`](scripts) directory and can be run from the terminal using the `bash` command as follows.
@@ -74,7 +74,7 @@ This step identifies samples that are likely polyclonal (based on mutation burde
 
 * This step requires data files produced in Step 0.
 * The output of this step is required for subsequent steps.
-* The approximate run time of this step is **1 hour**.
+* The estimated run time of this step is **1 hour**.
 * The output files produced include VAF histograms (`output/Clonality_VAF_Histograms.pdf`), a table of clonality-based sample filtering results (`output/Clonality_Results_Table.txt`), a list of samples to be excluded from all analyses (`data/processed/SamplesToExclude.txt`), and a list of samples to be excluded from mtDNA analyses only (`data/processed/SamplesToExclude_mtDNA.txt`).
 
 This step is performed by the R script `1_Clonality.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
@@ -94,7 +94,7 @@ This step produces mutational spectra of the somatic substitutions in each sampl
 * This step requires R packages `Biostrings`, `GenomicRanges` and `sigfit`.
 * This step requires data files produced in Steps 0 and 1.
 * The output of this step is required for subsequent steps.
-* The approximate run time of this step is **1.5 hours**.
+* The estimated run time of this step is **2 hours**.
 * The output files produced include plots of SBS spectra per sample and per species (`output/Spectra_Subs_Sample.pdf`, `output/Spectra_Subs_Species.pdf`), and an RData file containing mutational catalogues and opportunities (`data/processed/Catalogues_Opportunities.RData`).
 
 This step is performed by the R script `2_Spectra_SBS.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
@@ -118,7 +118,7 @@ This step produces mutational spectra of the somatic indels in each sample, and 
 * This step requires the `SigProfilerMatrixGenerator` Python 3 package, and the `SigProfilerMatrixGeneratorR` R package.
 * This step requires data files produced in Step 1.
 * The output of this step is **not** required for subsequent steps.
-* The approximate run time of this step is **10 minutes**.
+* The estimated run time of this step is **10 minutes**.
 * The output files produced include plots of indel spectra per sample and per species (folders `output/Spectra_Indels_Sample` and `output/Spectra_Indels_Species`).
 
 This step is performed by the R script `3_Spectra_Indels.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
@@ -134,11 +134,11 @@ Rscript scripts/3_Spectra_Indels.R
 
 This step infers mutational signatures from the catalogues of somatic substitutions in each species; performs a cross-species analysis of signature SBSB; and examines the prevalence of colibactin and APOBEC mutagenesis in non-human samples.
 
-* This step requires the `sigfit` R package (v2.1 or higher).
+* This step requires the `scales` and `sigfit` (v2.1 or higher) R packages.
 * This step requires data files produced in Steps 1 and 2.
 * The output of this step is required for subsequent steps.
-* The approximate run time of this step is **1.5 hours** (on 4 CPUs).
-* Parts of this step are run in parallel; the number of available CPUs is detected automatically.
+* Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see l. 81 in the script).
+* The estimated run time of this step is **2 hours** (on 4 CPUs).
 * The output files produced include plots of mutational signatures and exposures (folder `output/Signature_Extraction_Definitive`), plots of signature SBSB as inferred from the mutations in each species (`output/SBSB_Per_Species.pdf`), results from the analysis of colibactin and APOBEC prevalence (`output/Colibactin_Exposure.pdf`, `output/Colibactin_APOBEC_Tests.txt`), and RData files containing mutational signatures and signature exposures and mutation burdens per sample (`data/processed/Burden_Exposures.RData`, `data/processed/Signatures_Definitive.RData`).
 
 This step is performed by the R script `4_Signatures.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
@@ -158,7 +158,7 @@ Note that this step takes a very long time to run. However, its output is not re
 * This step requires R packages `bbmle`, `emdbook`, `GenomicRanges` and `MASS`.
 * This step requires data files produced in Step 1.
 * The output of this step is **not** required for subsequent steps.
-* The approximate run time of this step is **250 hours**.
+* The estimated run time of this step is **250 hours**.
 * The output files produced include plots and tables of copy number segments per sample (folder `output/Copy_Number`).
 
 This step is performed by the R script `5_Copy_Number.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
@@ -167,7 +167,7 @@ This step is performed by the R script `5_Copy_Number.R`, which is located in th
 Rscript scripts/5_Copy_Number.R
 ```
 
-**NB.** The run time of this step can be reduced substantially by limiting the analysis to species with copy number changes (see line 65 in script `5_CopyNumber.R`).
+**NB.** The run time of this step can be reduced substantially by limiting the analysis to species with copy number changes (see l. 65 in the script).
 
 ---
 
@@ -178,8 +178,8 @@ This step calculate the ratio between non-synonymous and synonymous mutation rat
 * This step requires R packages `dndscv` and `GenomicRanges`.
 * This step requires data files produced in Step 1.
 * The output of this step is **not** required for subsequent steps.
-* The approximate run time of this step is **10 minutes**.
-* The output files produced include a plot of exome-wide dN/dS per species (`output/dNdS_Species.pdf`) and a table of coding mutation counts per sample (`output/Coding_Mutation_Counts.txt`).
+* The estimated run time of this step is **15 minutes**.
+* The output files produced include plots of global dN/dS per species (`output/dNdS_Species.pdf`) and a table of coding mutation counts per sample (`output/Coding_Mutation_Counts.txt`).
 
 This step is performed by the R script `6_Selection.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
 
@@ -196,7 +196,7 @@ This step calculates corrected mutation burdens, rates for somatic substitutions
 * This step requires the `scales` R package.
 * This step requires data files produced in Steps 1 and 2.
 * The output of this step is required for subsequent steps.
-* The approximate run time of this step is **1 minute**.
+* The estimated run time of this step is **1 minute**.
 * The output files produced include plots, tables and RData files of mutation burdens, rates and end-of-lifespan burdens per sample (`output/Burden_Rate_ELB.pdf`, `output/Burden_Rate_ELB.txt`, `data/processed/Burdens_Rates.RData`).
 
 This step is performed by the R script `7_Burdens.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
@@ -209,12 +209,12 @@ Rscript scripts/7_Burdens.R
 
 ### Step 8: Regression analyses of somatic mutation burdens and rates
 
-This step applies a range of regression models (simple linear, linear mixed-effects (LME), hierarchical Bayesian, allometric, bootstrapped LME, and phylogenetic generalised least-squares) to quantify the associations between somatic mutation burdens/rates and several biological variables.
+This step applies a range of regression models (simple linear (LM), linear mixed-effects (LME), hierarchical Bayesian normal (BHN), allometric, bootstrapped LME, and phylogenetic generalised least-squares) to quantify the associations between somatic mutation burdens/rates and several biological variables.
 
 * This step requires R packages `caper`, `nlme`, `RColorBrewer`, `scales` and `rstan` (installed with `sigfit`).
 * This step requires data files produced in Steps 1, 7.
-* The approximate run time of this step is **2 hours** (on 4 CPUs).
-* Parts of this step are run in parallel; the number of available CPUs is detected automatically.
+* Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see l. 82 in the script).
+* The estimated run time of this step is **2 hours** (on 4 CPUs).
 * The output files produced include plots of the fitted models for each regression analysis (`output/Regression_Burden-Age_LM.pdf`, `output/Regression_Rates_LME-BHN.pdf`, `output/Regression_Allometric.pdf`, `output/Regression_Lifespan_Bootstrap.pdf`, `output/Regression_Model_Comparison.pdf`)
 
 This step is performed by the R script `8_Regressions.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.

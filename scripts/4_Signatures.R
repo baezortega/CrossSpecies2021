@@ -119,7 +119,7 @@ cat("\n\n")
 
 
 # Load packages and data
-PACKAGES = c("sigfit")
+PACKAGES = c("scales", "sigfit", "tools")
 cat("Loading packages:", paste(PACKAGES, collapse=", "), "\n")
 for (package in PACKAGES) {
     suppressPackageStartupMessages(library(package, character.only=TRUE, quietly=TRUE))
@@ -164,6 +164,7 @@ dir.create(OUTPUT$PDF.DIR, showWarnings=F)
 #                                      opportunities_to="human-genome"),
 #                   pdf_path=file.path(OUTPUT$PDF.DIR.PRELIM, i, OUTPUT$PDF.NORM.PRELIM))
 # }
+
 
 
 # (1) Final signature analysis
@@ -226,6 +227,7 @@ save(signatures.final, exposures.final, reconstructions.final, file=OUTPUT$SIGS.
 save(burden.expos, file=OUTPUT$BURDEN.DATA)
 
 
+
 # (2) Cross-species analysis of SBSB
 # To explore variation in SBSB across species, the fit-extract model in sigfit is used
 # to fit COSMIC SBS1, SBS18, SBS34 and extract one additional signature
@@ -235,9 +237,10 @@ sigs.fixed = convert_signatures(cosmic_signatures_v3[c("SBS1", "SBS18", "SBS34")
                                 opportunities_from="human-genome")
 
 # For each species, analyse mutation counts per individual
-cat("\n\nExtracting and plotting signature SBSB for each species:\n\n")
+cat("\nExtracting and plotting signature SBSB for each species:\n")
 fit.sbsb = lapply(rownames(species.counts), function(species) {
     
+    cat("\n", species, ":\n", sep="")
     species.idx = sample.info$SPECIES_NAME == species & !(sample.info$SAMPLE_NAME %in% exclude.list)
     indiv.ids = unique(sample.info$NORMAL_NAME[species.idx])
     indiv.counts = t(sapply(indiv.ids, function(id) {
@@ -249,8 +252,10 @@ fit.sbsb = lapply(rownames(species.counts), function(species) {
         normalise(colSums(sample.opps[sample.ids, , drop=F]))
     }))
     
-    suppressWarnings(fit_extract_signatures(indiv.counts, sigs.fixed, opportunities=indiv.opps,
-                                            num_extra_sigs=1, iter=ITER.2, warmup=WARMUP, seed=SEED))
+    suppressWarnings(fit_extract_signatures(indiv.counts, sigs.fixed,
+                                            num_extra_sigs=1, opportunities=indiv.opps,
+                                            iter=ITER.2, warmup=WARMUP, seed=SEED, refresh = 0))
+    cat(" Done\n")
 })
 
 sbsb.species = convert_signatures(rbind(as.numeric(signatures.final$mean[2, ]),
@@ -260,19 +265,20 @@ sbsb.species = convert_signatures(rbind(as.numeric(signatures.final$mean[2, ]),
 
 sbsb.sim.sbs5 = apply(sbsb.species, 1, sigfit:::cosine_sim, cosmic_signatures_v3["SBS5", ])
 sbsb.sim.sbs40 = apply(sbsb.species, 1, sigfit:::cosine_sim, cosmic_signatures_v3["SBS40", ])
-rownames(sbsb.species) = paste0("Signature B as inferred from ",
+rownames(sbsb.species) = paste0("SBSB as inferred from ",
                                 c("all species (original)", gsub("_", " ", rownames(species.counts))),
-                                " (cosine sim. to SBS5 = ", round(sbsb.sim.sbs5, 3),
+                                " (cosine similarity to SBS5 = ", round(sbsb.sim.sbs5, 3),
                                 ", SBS40 = ", round(sbsb.sim.sbs40, 3), ")")
 
-plot_spectrum(sbsb.indiv, pdf_path=OUTPUT$PDF.SBSB, pdf_width=27)
+plot_spectrum(sbsb.species, pdf_path=OUTPUT$PDF.SBSB, pdf_width=27)
+
 
 
 # (3) Assess prevalence of colibactin/APOBEC-induced mutations in non-human crypts
 
 # Load COSMIC v3.2 signatures (from sigfit v2.1)
 data("cosmic_signatures_v3.2")
-cat("\n\nAssessing colibactin and APOBEC prevalence...\n")
+cat("\nAssessing colibactin and APOBEC prevalence...\n")
 
 # Function: mutational signature fitting via expectation-maximization
 # Based on original code by Inigo Martincorena (Wellcome Sanger Institute)
@@ -358,15 +364,20 @@ fit.apobec$Qval_SBS13 = p.adjust(fit.apobec$Pval_SBS13, method="BH")
 # Plot colibactin exposures for non-human samples
 # (a sample is considered colibactin-positive if it has q < 0.05 for SBS88)
 pdf(OUTPUT$PDF.SBS88, 12, 4)
-par(mfrow=c(2,1), mar=c(2, 3, 1, 0.5), mgp=c(1, -0.5, -1.3), oma=c(0, 0, 2, 0), tcl=-0.2)
+suppressWarnings(par(mar=c(5.5, 3, 2, 0), mgp=c(1, -0.5, -1.3), tcl=-0.2))
 cols = alpha(c("#228B22", "#FF8C00", "#9932CC", "grey70", "firebrick"), 0.8)
-expos = fit.colibactin[, c(3:7,9:10)]
-b = barplot(t(expos[, 1:5]), col=cols, border=NA, ylab="Signature exposure",
-            cex.names=1e-9, las=1, cex.lab=1.1, cex.axis=0.85,
-            space=c(0, ifelse(expos$Species[-nrow(expos)] == expos$Species[-1], 0, 1)))
-text(b[expos$Qval_SBS88 < 0.05], 1.02, "*", font=2, xpd=NA)
-legend("topright", colnames(expos)[1:5], pch=22, pt.bg=cols, col=NA,
-       pt.lwd=0.75, pt.cex=2, xpd=NA, horiz=T, bty="n", inset=c(0.03, -0.18), cex=1.0)
+species = sample.info$SPECIES_NAME[match(fit.colibactin$Sample, sample.info$SAMPLE_NAME)]
+sig.names = c("SBS1", "SBS5", "SBS18", "SBS34", "SBS88")
+b = barplot(t(fit.colibactin[, sig.names]),
+            ylab="Signature exposure", las=1, cex.names=1e-9, cex.lab=1.1, cex.axis=0.85,
+            col=cols, border=NA, space=c(0, ifelse(species[-length(species)] == species[-1], 0, 1)))
+x = c(0, b[species[-length(species)] != species[-1]], b[length(b)]) + 1
+text(x=colMeans(rbind(x[-1], x[-length(x)])),
+     y=par()$usr[3]-0.02*(par()$usr[4]-par()$usr[3]),
+     labels=gsub("_", " ", toTitleCase(unique(species))), cex=0.9, srt=45, adj=1, xpd=TRUE)
+text(b[fit.colibactin$Qval_SBS88 < 0.05], 1.02, "*", cex=1.4, font=2, xpd=NA)
+legend("topright", sig.names, pch=22, pt.bg=cols, col=NA, pt.lwd=0.75, pt.cex=2,
+       xpd=NA, horiz=T, bty="n", inset=c(0.03, -0.15), cex=1.0)
 invisible(dev.off())
 
 # Use Fisher's exact test to assess significance of depletion in colibactin/APOBEC relative
@@ -385,16 +396,20 @@ invisible(dev.off())
 sink(OUTPUT$FISHER.TEST)
 
 # Fisher's test for colibactin prevalence
-cat("FISHER'S TEST FOR COLIBACTIN PREVALENCE IN HUMAN VS NON-HUMAN CRYPTS\n")
-fisher.test(matrix(c(353, 92, table(fit.colibactin$Qval_SBS88 < 0.05)),
-                   nrow=2, byrow=T,
-                   dimnames=list(c("Human", "Non-human"), c("Colibactin-", "Colibactin+"))))
+cat("FISHER'S TEST FOR COLIBACTIN PREVALENCE IN HUMAN VS NON-HUMAN CRYPTS\n\n")
+colibactin.counts = matrix(c(353, 92, table(fit.colibactin$Qval_SBS88 < 0.05)),
+                           nrow=2, byrow=T,
+                           dimnames=list(c("Human", "Non-human"), c("Colibactin-", "Colibactin+")))
+print(colibactin.counts)
+fisher.test(colibactin.counts)
 
 # Fisher's test for APOBEC prevalence
-cat("\n\nFISHER'S TEST FOR APOBEC PREVALENCE IN HUMAN VS NON-HUMAN CRYPTS\n")
-fisher.test(matrix(c(436, 9, table(fit.apobec$Qval_SBS2 < 0.05 & fit.apobec$Qval_SBS13 < 0.05)),
-                   nrow=2, byrow=T,
-                   dimnames=list(c("Human", "Non-human"), c("APOBEC-", "APOBEC+"))))
+cat("\n\nFISHER'S TEST FOR APOBEC PREVALENCE IN HUMAN VS NON-HUMAN CRYPTS\n\n")
+apobec.counts = matrix(c(436, 9, table(fit.apobec$Qval_SBS2 < 0.05 & fit.apobec$Qval_SBS13 < 0.05)),
+                       nrow=2, byrow=T,
+                       dimnames=list(c("Human", "Non-human"), c("APOBEC-", "APOBEC+")))
+print(apobec.counts)
+fisher.test(apobec.counts)
 sink()
 
 

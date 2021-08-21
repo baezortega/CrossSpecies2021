@@ -133,7 +133,7 @@ sample.data = sapply(sample.info$SAMPLE_NAME, function(x) NULL, simplify=F)
 
 
 
-# (i) Copy number calling
+# (1) Copy number calling
 # Infer initial CN segments per sample
 cn.segments.orig = suppressWarnings(sapply(SPECIES, function(species) {
     
@@ -436,7 +436,7 @@ cn.segments.orig = suppressWarnings(sapply(SPECIES, function(species) {
 
 
 
-# (ii) Segment filtering
+# (2) Segment filtering
 # For each species, filter copy number segments different from the default
 # CN=2 (1-1) which are shared among multiple samples (as shared CNVs are not expected)
 
@@ -499,7 +499,7 @@ for (species in SPECIES) {
 
 
 
-# (iii) Plotting and outputting
+# (3) Plotting and outputting
 cat("Plotting and outputting CN segments...\n")
 for (i in 1:length(cn.segments.filt)) {
     for (j in 1:length(cn.segments.filt[[i]])) {

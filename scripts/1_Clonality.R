@@ -416,7 +416,7 @@ write.table(sample.filt.table, file=OUTPUT$TABLE, sep="\t", col.names=T, row.nam
 # Output list of samples to exclude
 exclude.samples = sample.filt.table$Sample[(low.burden.idx | high.burden.idx | low.vaf.idx) &
                                                !(sample.filt.table$Sample %in% whitelist)]
-cat("\nExcluded samples:", exclude.samples, sep="\n")
+cat("\nSamples excluded from all analyses:", exclude.samples, sep="\n")
 cat(exclude.samples, file=OUTPUT$EXCLUDE, sep="\n")
 
 
