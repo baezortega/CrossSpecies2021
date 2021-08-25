@@ -115,7 +115,6 @@ cat("Loaded\n")
 # suggestive of polyclonality, a truncated binomial mixture model is fitted
 # using an expectation-maximisation algorith. The EM code below is adapted
 # from original code by T.H.H. COORENS (Wellcome Sanger Institute).
-#                       **************
 
 
 # Truncated binomial density function

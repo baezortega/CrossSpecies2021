@@ -164,8 +164,8 @@ cn.segments.orig = suppressWarnings(sapply(SPECIES, function(species) {
         
         
         # Infer allele-specific CN for bins with variants, total CN for bins without variants
-        # (code adapted from Inigo Martincorena [Martincorena et al., Science 2015])
-        
+        # (code adapted from I. MARTINCORENA, Wellcome Sanger Institute [Martincorena et al., 2015])
+
         # Define two sets of bins:
         #  (i) bins with coverage ≥10 in sample and matched normal, and ≥1 variant (for allele CN)
         # (ii) bins with cov ≥10 in sample and normal, but with no variants (for total CN only)

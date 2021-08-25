@@ -281,7 +281,7 @@ data("cosmic_signatures_v3.2")
 cat("\nAssessing colibactin and APOBEC prevalence...\n")
 
 # Function: mutational signature fitting via expectation-maximization
-# Based on original code by Inigo Martincorena (Wellcome Sanger Institute)
+# Based on original code by I. MARTINCORENA (Wellcome Sanger Institute)
 emsig = function(counts, signatures, maxiter = 1e4, epsilon = 1e-6) {
     counts = as.numeric(counts)
     num_signatures = nrow(signatures)
