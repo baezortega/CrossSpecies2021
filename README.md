@@ -34,10 +34,9 @@ R --version
 The current R version is also shown when opening RStudio or the R Console.
 
 The scripts require the following R packages:  [**`bbmle`**](https://cran.r-project.org/web/packages/bbmle/index.html),  [**`Biostrings`**](https://bioconductor.org/packages/release/bioc/html/Biostrings.html),  [**`caper`**](https://cran.r-project.org/web/packages/caper/index.html), [**`dNdScv`**](https://github.com/im3sanger/dndscv),  [**`emdbook`**](https://cran.r-project.org/web/packages/emdbook/index.html), 
-[**`GenomicRanges`**](https://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html),  [**`MASS`**](https://cran.r-project.org/web/packages/MASS/index.html),  [**`nlme`**](https://cran.r-project.org/web/packages/nlme/index.html),  [**`RColorBrewer`**](https://cran.r-project.org/web/packages/RColorBrewer/index.html),  [**`scales`**](https://cran.r-project.org/web/packages/scales/index.html),  [**`sigfit` (>=2.1)**](https://github.com/kgori/sigfit), 
-[**`SigProfilerMatrixGeneratorR`**](https://github.com/AlexandrovLab/SigProfilerMatrixGeneratorR).
+[**`GenomicRanges`**](https://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html),  [**`MASS`**](https://cran.r-project.org/web/packages/MASS/index.html),  [**`nlme`**](https://cran.r-project.org/web/packages/nlme/index.html),  [**`RColorBrewer`**](https://cran.r-project.org/web/packages/RColorBrewer/index.html),  [**`scales`**](https://cran.r-project.org/web/packages/scales/index.html),  [**`sigfit` (>=2.1)**](https://github.com/kgori/sigfit).
 
-In addition, note that [**Python 3**](https://www.python.org) and the Python package [**`SigProfilerMatrixGenerator`**](https://osf.io/s93d5/wiki/home/) are required before installing the `SigProfilerMatrixGeneratorR` R package, which is needed for one of the analysis steps below (Step 3). In addition, human, dog, mouse and rat reference genomes for `SigProfilerMatrixGenerator` need to be [installed manually](https://osf.io/s93d5/wiki/1.%20Installation%20-%20Python/). However, note that this particular step is not required for any subsequent data analyses, and so **can be omitted** if you encounter difficulties in installing Python 3 or `SigProfilerMatrixGenerator`. You should be able to check your current version of Python by running the command `python --version`.
+In addition, one of the analysis steps below (Step 3) makes use of code taken from the tool [Indelwald](https://github.com/MaximilianStammnitz/Indelwald) by Maximilian Stammnitz, which is already included in the [`scripts`](scripts) directory.
 
 Although care has been taken to make the code distribution-independent, some of the scripts may only work on Unix/MacOS systems, and may need to be modified in order to run on Windows systems.
 
@@ -91,7 +90,7 @@ Rscript scripts/1_Clonality.R
 
 This step produces mutational spectra of the somatic substitutions in each sample, and in all samples from each species.
 
-* This step requires R packages `Biostrings`, `GenomicRanges` and `sigfit`.
+* This step requires the R packages `Biostrings`, `GenomicRanges` and `sigfit`.
 * This step requires data files produced in Steps 0 and 1.
 * The output of this step is required for subsequent steps.
 * The estimated run time of this step is **2 hours**.
@@ -115,11 +114,11 @@ env R_MAX_VSIZE=100Gb Rscript scripts/2_Spectra_SBS.R
 
 This step produces mutational spectra of the somatic indels in each sample, and in all samples from each species.
 
-* This step requires the `SigProfilerMatrixGenerator` Python 3 package, and the `SigProfilerMatrixGeneratorR` R package.
+* This step requires the `Biostrings` R package.
 * This step requires data files produced in Step 1.
 * The output of this step is **not** required for subsequent steps.
-* The estimated run time of this step is **10 minutes**.
-* The output files produced include plots of indel spectra per sample and per species (folders `output/Spectra_Indels_Sample` and `output/Spectra_Indels_Species`).
+* The estimated run time of this step is **30 minutes**.
+* The output files produced include plots of indel spectra per sample and per species (`output/Spectra_Indels_Sample.pdf`, `output/Spectra_Indels_Species.pdf`).
 
 This step is performed by the R script `3_Spectra_Indels.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
 
@@ -134,7 +133,7 @@ Rscript scripts/3_Spectra_Indels.R
 
 This step infers mutational signatures from the catalogues of somatic substitutions in each species; performs a cross-species analysis of signature SBSB; and examines the prevalence of colibactin and APOBEC mutagenesis in non-human samples.
 
-* This step requires the `scales` and `sigfit` (v2.1 or higher) R packages.
+* This step requires the R packages `scales` and `sigfit` (v2.1 or higher).
 * This step requires data files produced in Steps 1 and 2.
 * The output of this step is required for subsequent steps.
 * Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see l. 81 in the script).
@@ -155,7 +154,7 @@ This step infers segments of total and allele-specific copy number for samples i
 
 Note that this step takes a very long time to run. However, its output is not required for subsequent analyses, and so it **can be omitted** if necessary.
 
-* This step requires R packages `bbmle`, `emdbook`, `GenomicRanges` and `MASS`.
+* This step requires the R packages `bbmle`, `emdbook`, `GenomicRanges` and `MASS`.
 * This step requires data files produced in Step 1.
 * The output of this step is **not** required for subsequent steps.
 * The estimated run time of this step is **250 hours**.
@@ -175,7 +174,7 @@ Rscript scripts/5_Copy_Number.R
 
 This step calculate the ratio between non-synonymous and synonymous mutation rates (dN/dS) from somatic substitutions in each species.
 
-* This step requires R packages `dndscv` and `GenomicRanges`.
+* This step requires the R packages `dndscv` and `GenomicRanges`.
 * This step requires data files produced in Step 1.
 * The output of this step is **not** required for subsequent steps.
 * The estimated run time of this step is **15 minutes**.
@@ -211,7 +210,7 @@ Rscript scripts/7_Burdens.R
 
 This step applies a range of regression models (simple linear (LM), linear mixed-effects (LME), hierarchical Bayesian normal (BHN), allometric, bootstrapped LME, and phylogenetic generalised least-squares) to quantify the associations between somatic mutation burdens/rates and several biological variables.
 
-* This step requires R packages `caper`, `nlme`, `RColorBrewer`, `scales` and `rstan` (installed with `sigfit`).
+* This step requires the R packages `caper`, `nlme`, `RColorBrewer`, `scales` and `rstan` (installed with `sigfit`).
 * This step requires data files produced in Steps 1, 7.
 * Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see l. 82 in the script).
 * The estimated run time of this step is **2 hours** (on 4 CPUs).
