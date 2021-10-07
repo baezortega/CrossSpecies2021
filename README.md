@@ -4,7 +4,7 @@ _Adrian Baez-Ortega
 Wellcome Sanger Institute  
 2020–21_
 
-This repository contains custom R and bash scripts which can be used to replicate the analyses presented in the article "UNPUBLISHED" (Cagan, Baez-Ortega _et al._, 2021).
+This repository contains custom R and bash scripts which can be used to replicate the analyses presented in the article "Somatic mutation rates scale with lifespan across mammals" (Cagan, Baez-Ortega _et al._, 2021) **[UNPUBLISHED]**.
 
 The set-up and usage of the data and scripts are explained below.
 
@@ -12,7 +12,7 @@ If you use some of these methods for your own research, please use the following
 
 ---
 
-#### A. Cagan, A. Baez-Ortega _et al_. [UNPUBLISHED]
+#### A. Cagan, A. Baez-Ortega _et al_. Somatic mutation rates scale with lifespan across mammals. ... [UNPUBLISHED]
 
 ---
 
@@ -36,7 +36,7 @@ The current R version is also shown when opening RStudio or the R Console.
 The scripts require the following R packages:  [**`bbmle`**](https://cran.r-project.org/web/packages/bbmle/index.html),  [**`Biostrings`**](https://bioconductor.org/packages/release/bioc/html/Biostrings.html),  [**`caper`**](https://cran.r-project.org/web/packages/caper/index.html), [**`dNdScv`**](https://github.com/im3sanger/dndscv),  [**`emdbook`**](https://cran.r-project.org/web/packages/emdbook/index.html), 
 [**`GenomicRanges`**](https://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html),  [**`MASS`**](https://cran.r-project.org/web/packages/MASS/index.html),  [**`nlme`**](https://cran.r-project.org/web/packages/nlme/index.html),  [**`RColorBrewer`**](https://cran.r-project.org/web/packages/RColorBrewer/index.html),  [**`scales`**](https://cran.r-project.org/web/packages/scales/index.html),  [**`sigfit` (>=2.1)**](https://github.com/kgori/sigfit).
 
-In addition, one of the analysis steps below (Step 3) makes use of code taken from the tool [Indelwald](https://github.com/MaximilianStammnitz/Indelwald) by Maximilian Stammnitz, which is already included in the [`scripts`](scripts) directory.
+In addition, one of the analysis steps below (Step 3) makes use of code taken from the tool [**Indelwald**](https://github.com/MaximilianStammnitz/Indelwald) by Maximilian Stammnitz, which is already included in the [`scripts`](scripts) directory.
 
 Although care has been taken to make the code distribution-independent, some of the scripts may only work on Unix/MacOS systems, and may need to be modified in order to run on Windows systems.
 
