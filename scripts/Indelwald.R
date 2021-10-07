@@ -25,19 +25,19 @@
 library(Biostrings)
 ###
 
-## Function to produce an indel spectrum
-indel.spectrum <- function(x, reference){
-  
-  ### MODIFIED (ao7) - replace 'str_split_fixed' with 'strsplit' alternative
-  str_split_fixed <- function(string, sep, n) {
+### MODIFIED (ao7) - replace 'str_split_fixed' with 'strsplit' alternative
+str_split_fixed <- function(string, sep, n) {
     t(sapply(strsplit(string, sep), function(x) {
         if (length(x) < n) x <- c(x, rep("", n-length(x)))
         if (length(x) > n) x <- c(x[1:(n-1)], paste(x[n:length(x)], collapse=sep))
         x
     }))
-  }
-  ###
-        
+}
+###
+
+## Function to produce an indel spectrum
+indel.spectrum <- function(x, reference){
+  
   ### MODIFIED (ao7) - force to matrix, add TRIPLET column, filter problematic indels
   stopifnot(all.equal(colnames(x), c('CHROM', 'POS', 'REF', 'ALT')))
   x <- as.matrix(cbind(x, 'TRIPLET'=NA))
