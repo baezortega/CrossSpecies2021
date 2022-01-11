@@ -1,10 +1,10 @@
-## Analysis scripts accompanying publication Cagan, Baez-Ortega _et al._, 2021
+## Computer code accompanying publication Cagan, Baez-Ortega _et al._, 2022
 
 _Adrian Baez-Ortega  
 Wellcome Sanger Institute  
-2020–21_
+2020–22_
 
-This repository contains custom R and bash scripts which can be used to replicate the analyses presented in the article "Somatic mutation rates scale with lifespan across mammals" (Cagan, Baez-Ortega _et al._, 2021) **[UNPUBLISHED]**.
+This repository contains custom R and bash scripts which can be used to replicate the analyses presented in the article "Somatic mutation rates scale with lifespan across mammals" (Cagan, Baez-Ortega _et al._, _Nature_ 2022).
 
 The set-up and usage of the data and scripts are explained below.
 
@@ -12,7 +12,7 @@ If you use some of these methods for your own research, please use the following
 
 ---
 
-#### A. Cagan, A. Baez-Ortega _et al_. Somatic mutation rates scale with lifespan across mammals. ... [UNPUBLISHED]
+#### A. Cagan, A. Baez-Ortega _et al_. Somatic mutation rates scale with lifespan across mammals. _Nature_ (2022).
 
 ---
 
@@ -24,7 +24,7 @@ In order to run the scripts, the repository must first be cloned into a director
 git clone https://github.com/baezortega/CrossSpecies2021.git ~/Desktop/CrossSpecies2021
 ```
 
-The scripts are written to run on [**R**](https://www.r-project.org/) version **3.6.2** or later. You should be able to check your current version of R by running one of the commands below (depending on your installation):
+The scripts are written to run on **[R](https://www.r-project.org/) version 3.6.2** or later. You should be able to check your current version of R by running one of the commands below (depending on your installation):
 
 ```
 R --version
@@ -33,7 +33,7 @@ R --version
 
 The current R version is also shown when opening RStudio or the R Console.
 
-The scripts require the following R packages:  [**`bbmle`**](https://cran.r-project.org/web/packages/bbmle/index.html),  [**`Biostrings`**](https://bioconductor.org/packages/release/bioc/html/Biostrings.html),  [**`caper`**](https://cran.r-project.org/web/packages/caper/index.html), [**`dNdScv`**](https://github.com/im3sanger/dndscv),  [**`emdbook`**](https://cran.r-project.org/web/packages/emdbook/index.html), 
+The scripts require the following **R packages**:  [**`bbmle`**](https://cran.r-project.org/web/packages/bbmle/index.html),  [**`Biostrings`**](https://bioconductor.org/packages/release/bioc/html/Biostrings.html),  [**`caper`**](https://cran.r-project.org/web/packages/caper/index.html), [**`dNdScv`**](https://github.com/im3sanger/dndscv),  [**`emdbook`**](https://cran.r-project.org/web/packages/emdbook/index.html), 
 [**`GenomicRanges`**](https://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html),  [**`MASS`**](https://cran.r-project.org/web/packages/MASS/index.html),  [**`nlme`**](https://cran.r-project.org/web/packages/nlme/index.html),  [**`RColorBrewer`**](https://cran.r-project.org/web/packages/RColorBrewer/index.html),  [**`scales`**](https://cran.r-project.org/web/packages/scales/index.html),  [**`sigfit` (>=2.1)**](https://github.com/kgori/sigfit).
 
 In addition, one of the analysis steps below (Step 3) makes use of code taken from the tool [**Indelwald**](https://github.com/MaximilianStammnitz/Indelwald) by Maximilian Stammnitz, which is already included in the [`scripts`](scripts) directory.
@@ -52,7 +52,7 @@ cd ~/Desktop/CrossSpecies2021
 
 ### Step 0: Setting up project data and directories
 
-Before commencing the analyses, this script initialise the directory structure, and downloads the project data files from [Zenodo](http://zenodo.org/record/XXXXXXXX) and the required reference genomes from Ensembl/NCBI.
+Before commencing the analyses, this script initialise the directory structure, and downloads the project data files from [Zenodo](https://doi.org/10.5281/zenodo.5554777) and the required reference genomes from Ensembl/NCBI.
 
 * This step uses the `curl` command and requires Internet access.
 * The output of this step is required for subsequent steps.
