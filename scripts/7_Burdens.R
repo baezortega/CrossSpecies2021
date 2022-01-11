@@ -1,7 +1,7 @@
-# Analysis scripts for Cagan, Baez-Ortega et al., 2021
+# Analysis scripts for Cagan, Baez-Ortega et al., 2022
 # Step 7: Calculation of somatic mutation burdens and rates per sample
 
-# Adrian Baez-Ortega, 2020-21
+# Adrian Baez-Ortega, 2020-22
 
 
 # TO RUN THIS SCRIPT IN THE TERMINAL

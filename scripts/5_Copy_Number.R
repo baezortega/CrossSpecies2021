@@ -1,7 +1,7 @@
-# Analysis scripts for Cagan, Baez-Ortega et al., 2021
+# Analysis scripts for Cagan, Baez-Ortega et al., 2022
 # Step 5: Inference of allele-specific copy number in chromosome-level assemblies
 
-# Adrian Baez-Ortega, 2020-21
+# Adrian Baez-Ortega, 2020-22
 
 
 # TO RUN THIS SCRIPT IN THE TERMINAL

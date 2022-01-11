@@ -1,7 +1,7 @@
-# Analysis scripts for Cagan, Baez-Ortega et al., 2021
+# Analysis scripts for Cagan, Baez-Ortega et al., 2022
 # Step 1: Identification of likely polyclonal samples
 
-# Adrian Baez-Ortega, 2020-21
+# Adrian Baez-Ortega, 2020-22
 
 
 # TO RUN THIS SCRIPT IN THE TERMINAL

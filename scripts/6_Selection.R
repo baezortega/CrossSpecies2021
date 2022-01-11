@@ -1,7 +1,7 @@
-# Analysis scripts for Cagan, Baez-Ortega et al., 2021
+# Analysis scripts for Cagan, Baez-Ortega et al., 2022
 # Step 6: Inference of dN/dS ratios in species with genome annotation
 
-# Adrian Baez-Ortega, 2020-21
+# Adrian Baez-Ortega, 2020-22
 
 
 # TO RUN THIS SCRIPT IN THE TERMINAL

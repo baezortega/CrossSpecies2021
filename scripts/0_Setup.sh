@@ -1,7 +1,7 @@
-# Analysis scripts for Cagan, Baez-Ortega et al., 2021
+# Analysis scripts for Cagan, Baez-Ortega et al., 2022
 # Step 0: Setting up project data and directories
 
-# Adrian Baez-Ortega, 2020-21
+# Adrian Baez-Ortega, 2020-22
 
 
 # TO RUN THIS SCRIPT IN THE TERMINAL
@@ -13,8 +13,8 @@
 #    bash scripts/0_Setup.sh
 
 
-# URL for data files (Zenodo, DOI:XXXX)
-DATA_URL="http://zenodo.org/record/XXXXXXXX/files/CrossSpecies2021_Data.tar.gz"  ### UPDATE
+# URL for data files (Zenodo, DOI 10.5281/zenodo.5554777)
+DATA_URL="http://zenodo.org/record/5554778/files/CrossSpecies2021_Data.tar.gz"
 
 
 # Create required directories
