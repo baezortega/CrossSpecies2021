@@ -25,13 +25,13 @@ mkdir -p data/original/RefGenomes data/processed output
 echo -e "\nDownloading project data:"
 curl $DATA_URL -o data.tar.gz  -L -k -#
 
-echo -e "\n\nDecompressing project data..."
+echo -e "\nDecompressing project data..."
 tar xf data.tar.gz
 rm data.tar.gz
 
 
 # Download reference genomes
-echo -e "\n\nDownloading reference genomes:"
+echo -e "\nDownloading reference genomes:"
 while read SPECIES URL; do
 
     echo -e "\n$SPECIES"
