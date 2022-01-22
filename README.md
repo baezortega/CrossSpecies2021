@@ -52,14 +52,14 @@ cd ~/Desktop/CrossSpecies2021
 
 ### Step 0: Setting up project data and directories
 
-Before commencing the analyses, this script initialise the directory structure, and downloads the project data files from [Zenodo](https://doi.org/10.5281/zenodo.5554777) and the required reference genomes from Ensembl/NCBI.
+Before commencing the analyses, this script initialises the directory structure, and downloads the project data files from [Zenodo](https://doi.org/10.5281/zenodo.5554777) and the required reference genomes from Ensembl/NCBI.
 
 * This step uses the `curl` command and requires Internet access.
 * The output of this step is required for subsequent steps.
 * The estimated run time of this step is **30 minutes**.
 * The output files produced include all the necessary data files (`data/original` folder).
 
-This step is performed by the R script `0_Setup.sh`, which is located in the [`scripts`](scripts) directory and can be run from the terminal using the `bash` command as follows.
+This step is performed by the bash script `0_Setup.sh`, which is located in the [`scripts`](scripts) directory and can be run from the terminal using the `bash` command as follows.
 
 ```
 bash scripts/0_Setup.sh
@@ -131,14 +131,14 @@ Rscript scripts/3_Spectra_Indels.R
 ### Step 4: Inference of mutational signatures from somatic substitutions
 
 
-This step infers mutational signatures from the catalogues of somatic substitutions in each species; performs a cross-species analysis of signature SBSB; and examines the prevalence of colibactin and APOBEC mutagenesis in non-human samples.
+This step infers mutational signatures from the catalogues of somatic substitutions in each species, performs a cross-species analysis of signature SBSB, and examines the prevalence of colibactin and APOBEC mutagenesis in non-human samples.
 
 * This step requires the R packages `scales` and `sigfit` (v2.1 or higher).
 * This step requires data files produced in Steps 1 and 2.
 * The output of this step is required for subsequent steps.
-* Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see l. 81 in the script).
+* Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see line 81 in the script).
 * The estimated run time of this step is **2 hours** (on 4 CPUs).
-* The output files produced include plots of mutational signatures and exposures (folder `output/Signature_Extraction_Definitive`), plots of signature SBSB as inferred from the mutations in each species (`output/SBSB_Per_Species.pdf`), results from the analysis of colibactin and APOBEC prevalence (`output/Colibactin_Exposure.pdf`, `output/Colibactin_APOBEC_Tests.txt`), and RData files containing mutational signatures and signature exposures and mutation burdens per sample (`data/processed/Burden_Exposures.RData`, `data/processed/Signatures_Definitive.RData`).
+* The output files produced include plots of mutational signatures and exposures (folder `output/Signature_Extraction_Definitive`), plots of signature SBSB as inferred from the mutations in each species (`output/SBSB_Per_Species.pdf`), results from the analysis of colibactin and APOBEC prevalence (`output/Colibactin_Exposure.pdf`, `output/Colibactin_APOBEC_Tests.txt`), and RData files containing mutation burdens per sample and mutational signatures and exposures (`data/processed/Burden_Exposures.RData`, `data/processed/Signatures_Definitive.RData`).
 
 This step is performed by the R script `4_Signatures.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
 
@@ -148,11 +148,11 @@ Rscript scripts/4_Signatures.R
 
 ---
 
-### Step 5: Inference of allele-specific copy number in chromosome-level assemblies
+### Step 5: Inference of copy number in chromosome-level assemblies
 
 This step infers segments of total and allele-specific copy number for samples in species with chromosome-level genome assemblies.
 
-Note that this step takes a very long time to run. However, its output is not required for subsequent analyses, and so it **can be omitted** if necessary.
+Note that this step takes a very long time to run. However, its output is not required for subsequent analyses, and so it **can be omitted** if preferred.
 
 * This step requires the R packages `bbmle`, `emdbook`, `GenomicRanges` and `MASS`.
 * This step requires data files produced in Step 1.
@@ -166,13 +166,13 @@ This step is performed by the R script `5_Copy_Number.R`, which is located in th
 Rscript scripts/5_Copy_Number.R
 ```
 
-**NB.** The run time of this step can be reduced substantially by limiting the analysis to species with copy number changes (see l. 65 in the script).
+**NB.** The run time of this step can be reduced substantially by restricting the analysis to species that present copy number changes (see line 65 in the script).
 
 ---
 
 ### Step 6: Inference of dN/dS ratios in species with genome annotation
 
-This step calculate the ratio between non-synonymous and synonymous mutation rates (dN/dS) from somatic substitutions in each species.
+This step calculates the ratio between non-synonymous and synonymous mutation rates (dN/dS) from somatic substitutions in each species.
 
 * This step requires the R packages `dndscv` and `GenomicRanges`.
 * This step requires data files produced in Step 1.
@@ -190,10 +190,10 @@ Rscript scripts/6_Selection.R
 
 ### Step 7: Calculation of somatic mutation burdens and rates per sample
 
-This step calculates corrected mutation burdens, rates for somatic substitutions, indels, mtDNA mutations and signature-specific mutations.
+This step calculates corrected mutation burdens and rates for somatic substitutions, indels, mtDNA mutations, and signature-specific mutations.
 
 * This step requires the `scales` R package.
-* This step requires data files produced in Steps 1 and 2.
+* This step requires data files produced in Steps 1, 2 and 4.
 * The output of this step is required for subsequent steps.
 * The estimated run time of this step is **1 minute**.
 * The output files produced include plots, tables and RData files of mutation burdens, rates and end-of-lifespan burdens per sample (`output/Burden_Rate_ELB.pdf`, `output/Burden_Rate_ELB.txt`, `data/processed/Burdens_Rates.RData`).
@@ -208,13 +208,13 @@ Rscript scripts/7_Burdens.R
 
 ### Step 8: Regression analyses of somatic mutation burdens and rates
 
-This step applies a range of regression models (simple linear (LM), linear mixed-effects (LME), hierarchical Bayesian normal (BHN), allometric, bootstrapped LME, and phylogenetic generalised least-squares) to quantify the associations between somatic mutation burdens/rates and several biological variables.
+This step applies a range of regression models (simple linear (LM), linear mixed-effects (LME), hierarchical Bayesian normal (BHN), allometric, bootstrapped LME, and phylogenetic generalised least-squares) to quantify the associations between somatic mutation burdens/rates and a set of biological variables.
 
-* This step requires the R packages `caper`, `nlme`, `RColorBrewer`, `scales` and `rstan` (installed with `sigfit`).
-* This step requires data files produced in Steps 1, 7.
-* Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see l. 82 in the script).
+* This step requires the R packages `caper`, `nlme`, `RColorBrewer`, `rstan` (installed with `sigfit`), and `scales`.
+* This step requires data files produced in Steps 1 and 7.
+* Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see line 82 in the script).
 * The estimated run time of this step is **2 hours** (on 4 CPUs).
-* The output files produced include plots of the fitted models for each regression analysis (`output/Regression_Burden-Age_LM.pdf`, `output/Regression_Rates_LME-BHN.pdf`, `output/Regression_Allometric.pdf`, `output/Regression_Lifespan_Bootstrap.pdf`, `output/Regression_Model_Comparison.pdf`)
+* The output files produced include plots of fitted models for each regression analysis (`output/Regression_Burden-Age_LM.pdf`, `output/Regression_Rates_LME-BHN.pdf`, `output/Regression_Allometric.pdf`, `output/Regression_Lifespan_Bootstrap.pdf`, `output/Regression_Model_Comparison.pdf`)
 
 This step is performed by the R script `8_Regressions.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
 
