@@ -196,7 +196,7 @@ for (species in SPECIES) {
 
 
 # Plot global dN/dS per species, for all genes and haploinsufficient genes
-cat("\nPlotting global dN/dS per species...\n")
+cat("\n\nPlotting global dN/dS per species...\n")
 pdf(OUTPUT$PDF, 15, 6)
 par(mar=c(3, 5, 3, 1.75))
 cols = c(mis="#377EB8", non="#E41A1C", spl="#4DAF4A", tru="#FF7F00", all="#984EA3", NA, NA)
