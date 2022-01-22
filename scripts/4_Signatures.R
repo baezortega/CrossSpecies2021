@@ -213,7 +213,7 @@ plot_exposures(fit.sample, cex_names=0.5, margin_bottom=9,
 plot_reconstruction(fit.sample, pdf_path=file.path(OUTPUT$PDF.DIR, OUTPUT$PDF.REC))
 
 # Build table of burden and exposures per sample
-cat("\nBuilding burden and exposures table...\n")
+cat("\n\nBuilding burden and exposures table...\n")
 burden.expos = data.frame("Sample" = rownames(sample.counts),
                           "Mutations" = rowSums(sample.counts),
                           "SBS1_exposure" = exposures.final$mean[, 1],
@@ -237,7 +237,7 @@ sigs.fixed = convert_signatures(cosmic_signatures_v3[c("SBS1", "SBS18", "SBS34")
                                 opportunities_from="human-genome")
 
 # For each species, analyse mutation counts per individual
-cat("\nExtracting and plotting signature SBSB for each species:\n")
+cat("\n\nExtracting and plotting signature SBSB for each species:\n")
 fit.sbsb = lapply(rownames(species.counts), function(species) {
     
     cat("\n", species, ":\n", sep="")
@@ -252,10 +252,11 @@ fit.sbsb = lapply(rownames(species.counts), function(species) {
         normalise(colSums(sample.opps[sample.ids, , drop=F]))
     }))
     
-    suppressWarnings(fit_extract_signatures(indiv.counts, sigs.fixed,
-                                            num_extra_sigs=1, opportunities=indiv.opps,
-                                            iter=ITER.2, warmup=WARMUP, seed=SEED, refresh = 0))
+    fit = suppressWarnings(fit_extract_signatures(indiv.counts, sigs.fixed,
+                                                  num_extra_sigs=1, opportunities=indiv.opps,
+                                                  iter=ITER.2, warmup=WARMUP, seed=SEED, refresh=0))
     cat(" Done\n")
+    fit
 })
 
 sbsb.species = convert_signatures(rbind(as.numeric(signatures.final$mean[2, ]),
@@ -278,7 +279,7 @@ plot_spectrum(sbsb.species, pdf_path=OUTPUT$PDF.SBSB, pdf_width=27)
 
 # Load COSMIC v3.2 signatures (from sigfit v2.1)
 data("cosmic_signatures_v3.2")
-cat("\nAssessing colibactin and APOBEC prevalence...\n")
+cat("\n\nAssessing colibactin and APOBEC prevalence...\n")
 
 # Function: mutational signature fitting via expectation-maximization
 # Based on original code by I. MARTINCORENA (Wellcome Sanger Institute)
