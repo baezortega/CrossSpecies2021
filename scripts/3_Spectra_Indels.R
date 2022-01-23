@@ -165,12 +165,13 @@ for (species in unique(sample.info$SPECIES_NAME)) {
     
     sample.spectra = rbind(sample.spectra, spectra)
     species.spectra = rbind(species.spectra, indel.spectrum(species.vars, genome))
-    rownames(species.spectra)[nrow(species.spectra)] = species
+    rownames(species.spectra)[nrow(species.spectra)] = gsub("_", " ", toTitleCase(species))
     rm(genome); invisible(gc())
 }
 
 
 # Plot spectra per sample and per species
+cat("\nPlotting mutational spectra...\n")
 cairo_pdf(OUTPUT$PDF.SAMPLE, 24, 8, onefile=T)
 par(mar = c(5.5, 7, 12.5, 2))
 plot.spectrum(sample.spectra)

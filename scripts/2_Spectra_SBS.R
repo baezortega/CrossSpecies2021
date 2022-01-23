@@ -151,14 +151,13 @@ for (species in unique(sample.info$SPECIES_NAME)) {
         
         # Append variants to variant tables
         sample.vars = rbind(sample.vars,
-                            cbind(Sample = paste("Filtered variants in", sample.id),
+                            cbind(Sample = sample.id,
                                   Ref = vars$Ref,
                                   Alt = vars$Alt,
                                   Context = context))
         
         species.vars = rbind(species.vars,
-                             cbind(Sample = paste("Filtered variants in",
-                                                  gsub("_", " ", toTitleCase(species))),
+                             cbind(Sample = gsub("_", " ", toTitleCase(species)),
                                    Ref = vars$Ref,
                                    Alt = vars$Alt,
                                    Context = context))
@@ -198,11 +197,8 @@ cat("\nBuilding mutational catalogues...\n")
 sample.counts = suppressWarnings(build_catalogues(sample.vars))
 species.counts = suppressWarnings(build_catalogues(species.vars))
 colnames(sample.opps) = colnames(species.opps) = colnames(sample.counts)
-stopifnot(identical(gsub("Filtered variants in ", "", rownames(sample.counts)),
-                    rownames(sample.opps)))
-stopifnot(identical(tolower(gsub(" ", "_",
-                                 gsub("Filtered variants in ", "", rownames(species.counts)))),
-                    rownames(species.opps)))
+stopifnot(identical(rownames(sample.counts), rownames(sample.opps)))
+stopifnot(identical(tolower(gsub(" ", "_", rownames(species.counts))), rownames(species.opps)))
 
 # Plot mutational spectra
 cat("Plotting mutational spectra...\n")
