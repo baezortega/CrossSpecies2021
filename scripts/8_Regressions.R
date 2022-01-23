@@ -48,6 +48,9 @@ INPUT = list(
 # Output file paths
 OUTPUT = list(
     
+    # Path to table of mutation rate regression coefficients (LME model)
+    RATES.TABLE = file.path("output", "Regression_Rates_LME.txt"),
+    
     # Path to PDF of mutation rate regressions (LME/BHN model)
     RATES.PDF = file.path("output", "Regression_Rates_LME-BHN.pdf"),
     
@@ -569,7 +572,7 @@ for (i in 1:length(lme.rates.lifespan80)) {
     text(species.data$Lifespan80, rates + max(rates, na.rm=T) * 0.025,
          labels=SP.LAB[species.data$Species], cex=0.5)
     mtext(c(paste(ifelse(name == "mtDNA_rate", "LM: ", "LME: "), name, "~ 1/Lifespan80 – 1"),
-            paste0("k = ", k.est[2], " (95% CI: ", k.est[1], "–", k.est[3], ")"),
+            paste0("k = ", k.est[2], ",  95% CI: (", k.est[1], ", ", k.est[3], ")"),
             paste("FVE =", fve)),
           side=3, at=25, line=-(3:5), adj=0, cex=0.9)
     
@@ -595,7 +598,7 @@ for (i in 1:length(lme.rates.lifespan80)) {
     text(species.data$Lifespan80, rates + max(rates, na.rm=T) * 0.025,
          labels=SP.LAB[species.data$Species], cex=0.5)
     mtext(c(paste("BHN: ", name, "~ 1/Lifespan80 – 1"),
-            paste0("k = ", k.est[2], " (95% CI: ", k.est[1], "–", k.est[3], ")"),
+            paste0("k = ", k.est[2], ",  95% CI: (", k.est[1], ", ", k.est[3], ")"),
             paste("FVE =", fve)),
           side=3, at=25, line=-(3:5), adj=0, cex=0.9)
     title(paste("Regression of", name, "on 1/Lifespan80 (constrained)"), outer=T, line=-1.8)
@@ -628,11 +631,12 @@ for (i in 1:length(lme.rate.anage.single)) {
     points(predictor, species.data$Mut_rate, pch=16, cex=1.2)
     text(predictor, species.data$Mut_rate + max(species.data$Mut_rate) * 0.025,
          labels=SP.LAB[species.data$Species], cex=0.5)
+    x.at = ifelse(name == "Residuals_BMR_Mass", -0.38, 0.11 * max(predictor, na.rm=T))
     mtext(c(paste("LME:  Mut_rate ~", name),
-            paste0("Intercept = ", k.est[1, 2], " (95% CI: ", k.est[1, 1], "–", k.est[1, 3], ")"),
-            paste0("Slope = ", k.est[2, 2], " (95% CI: ", k.est[2, 1], "–", k.est[2, 3], ")"),
+            paste0("Intercept = ", k.est[1, 2], ",  95% CI: (", k.est[1, 1], ", ", k.est[1, 3], ")"),
+            paste0("Slope = ", k.est[2, 2], ",  95% CI: (", k.est[2, 1], ", ", k.est[2, 3], ")"),
             paste("FVE =", fve)),
-          side=3, at=0.12 * max(predictor, na.rm=T), line=-(3:6), adj=0, cex=0.9)
+          side=3, at=x.at, line=-(3:6), adj=0, cex=0.9)
     
     # Obtain k, FVE and 95% credible intervals for BHN
     ci.x = seq(min(0, 1.3 * min(predictor, na.rm=T)), 1.2 * max(predictor, na.rm=T), len=40)
@@ -657,11 +661,12 @@ for (i in 1:length(lme.rate.anage.single)) {
     points(predictor, species.data$Mut_rate, pch=16, cex=1.2)
     text(predictor, species.data$Mut_rate + max(species.data$Mut_rate) * 0.025,
          labels=SP.LAB[species.data$Species], cex=0.5)
+    x.at = ifelse(name == "Residuals_BMR_Mass", -0.38, 0.11 * max(predictor, na.rm=T))
     mtext(c(paste("BHN:  Mut_rate ~", names(bhn.rate.anage.single)[i]),
-            paste0("Intercept = ", k.est[1, 2], " (95% CI: ", k.est[1, 1], "–", k.est[1, 3], ")"),
-            paste0("Slope = ", k.est[2, 2], " (95% CI: ", k.est[2, 1], "–", k.est[2, 3], ")"),
+            paste0("Intercept = ", k.est[1, 2], ",  95% CI: (", k.est[1, 1], ", ", k.est[1, 3], ")"),
+            paste0("Slope = ", k.est[2, 2], ",  95% CI: (", k.est[2, 1], ", ", k.est[2, 3], ")"),
             paste("FVE =", fve)),
-          side=3, at=0.12 * max(predictor, na.rm=T), line=-(3:6), adj=0, cex=0.9)
+          side=3, at=x.at, line=-(3:6), adj=0, cex=0.9)
     title(paste("Regression of Mut_rate on", names(bhn.rate.anage.single)[i]), outer=T, line=-1.8)
 }
 
@@ -870,6 +875,63 @@ hist(lme.rate.lifespan.boot[, 2], breaks=100, col="dodgerblue4", border="white",
 abline(h=0)
 
 invisible(dev.off())
+
+
+# (8) Save table of LME regression coefficients
+cat("\nSaving LME regression coefficients...\n")
+lme.coef.table = NULL
+
+for (i in 1:length(lme.rates.lifespan80)) {
+    name = names(lme.rates.lifespan80)[i]
+    if (name == "mtDNA_rate") {
+        k.est = round(c(confint(lme.rates.lifespan80[[i]])[1], coef(lme.rates.lifespan80[[i]]),
+                        confint(lme.rates.lifespan80[[i]])[2]), 2)
+        fve = round(r2.lm(lme.rates.lifespan80[[i]]), 2)
+    } else {
+        k.est = round(intervals(lme.rates.lifespan80[[i]], which="fixed")$fixed, 2)
+        fve = round(r2.lme(lme.rates.lifespan80[[i]],
+                           model.matrix(~ Inverse_Lifespan80 - 1, species.data),
+                           species.data[, name]), 2)
+    }
+    lme.coef.table = rbind(lme.coef.table,
+                           c("Model type" = ifelse(name == "mtDNA_rate", "LM", "LME"),
+                             "Formula" = paste(name, "~ 1/Lifespan80 - 1"),
+                             "Intercept MLE" = NA,
+                             "Intercept 95% CI" = NA,
+                             "Slope MLE" = k.est[2],
+                             "Slope 95% CI" = paste(k.est[c(1, 3)], collapse=","),
+                             "FVE" = fve))
+}
+
+for (i in 1:length(lme.rate.anage.single)) {
+    name = names(lme.rate.anage.single)[i]
+    k.est = round(intervals(lme.rate.anage.single[[i]], which="fixed")$fixed, 2)
+    fve = round(lme.rate.anage.single.fve[i], 2)
+    lme.coef.table = rbind(lme.coef.table,
+                           c("Model type" = "LME",
+                             "Formula" = paste("Mut_rate ~", name),
+                             "Intercept MLE" = k.est[1, 2],
+                             "Intercept 95% CI" = paste(k.est[1, c(1, 3)], collapse=","),
+                             "Slope MLE" = k.est[2, 2],
+                             "Slope 95% CI" = paste(k.est[2, c(1, 3)], collapse=","),
+                             "FVE" = fve))
+}
+
+for (i in 1:length(lme.rate.anage.paired)) {
+    name = names(lme.rate.anage.paired)[i]
+    k.est = round(intervals(lme.rate.anage.paired[[i]], which="fixed")$fixed, 2)
+    fve = round(lme.rate.anage.paired.fve[i], 2)
+    lme.coef.table = rbind(lme.coef.table,
+                           c("Model type" = "LME",
+                             "Formula" = paste("Mut_rate ~ 1/Lifespan80 +", name),
+                             "Intercept MLE" = k.est[1, 2],
+                             "Intercept 95% CI" = paste(k.est[1, c(1, 3)], collapse=","),
+                             "Slope MLE" = k.est[2, 2],
+                             "Slope 95% CI" = paste(k.est[2, c(1, 3)], collapse=","),
+                             "FVE" = fve))
+}
+
+write.table(lme.coef.table, file=OUTPUT$RATES.TABLE, sep="\t", quote=F, row.names=F)
 
 
 cat("\nDone\n\n")
