@@ -214,7 +214,7 @@ This step applies a range of regression models (simple linear (LM), linear mixed
 * This step requires data files produced in Steps 1 and 7.
 * Parts of this step are run **in parallel**; the number of available CPUs is detected automatically (see line 82 in the script).
 * The estimated run time of this step is **2 hours** (on 4 CPUs).
-* The output files produced include plots of fitted models for each regression analysis (`output/Regression_Burden-Age_LM.pdf`, `output/Regression_Rates_LME-BHN.pdf`, `output/Regression_Allometric.pdf`, `output/Regression_Lifespan_Bootstrap.pdf`, `output/Regression_Model_Comparison.pdf`) and a table of regression coefficients for fitted LME models (`output/Regression_Rates_LME.pdf`).
+* The output files produced include plots of fitted models for each regression analysis (`output/Regression_Burden-Age_LM.pdf`, `output/Regression_Rates_LME-BHN.pdf`, `output/Regression_Allometric.pdf`, `output/Regression_Lifespan_Bootstrap.pdf`, `output/Regression_Model_Comparison.pdf`) and a table of regression coefficients and FVEs for fitted LME models (`output/Regression_Rates_LME.txt`).
 
 This step is performed by the R script `8_Regressions.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
 
