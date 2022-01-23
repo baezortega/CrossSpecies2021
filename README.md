@@ -196,7 +196,7 @@ This step calculates corrected mutation burdens and rates for somatic substituti
 * This step requires data files produced in Steps 1, 2 and 4.
 * The output of this step is required for subsequent steps.
 * The estimated run time of this step is **1 minute**.
-* The output files produced include plots, tables and RData files of mutation burdens, rates and end-of-lifespan burdens per sample (`output/Burden_Rate_ELB.pdf`, `output/Burden_Rate_ELB.txt`, `data/processed/Burdens_Rates.RData`).
+* The output files produced include plots, tables and RData files of mutation burdens, rates and end-of-lifespan burdens per sample and per species (`output/Burden_Rate_ELB.pdf`, `output/Burden_Rate_ELB_Sample.txt`, `output/Burden_Rate_ELB_Species.txt`, `data/processed/Burdens_Rates.RData`).
 
 This step is performed by the R script `7_Burdens.R`, which is located in the [`scripts`](scripts) directory and can be run either from RStudio (following the instructions at the beginning of the script), or from the terminal using the `Rscript` command as follows.
 
