@@ -73,7 +73,10 @@ OUTPUT = list(
     PDF = file.path("output", "Burden_Rate_ELB.pdf"),
     
     # Path to table of mutation burdens, rates and ELBs per sample
-    TABLE = file.path("output", "Burden_Rate_ELB.txt"),
+    TABLE.SAMPLE = file.path("output", "Burden_Rate_ELB_Sample.txt"),
+    
+    # Path to table of mean mutation burdens, rates and ELBs per species
+    TABLE.SPECIES = file.path("output", "Burden_Rate_ELB_Species.txt"),
     
     # Path to RData file of mutation burdens and rates
     DATA = file.path("data", "processed", "Burdens_Rates.RData")
@@ -213,19 +216,22 @@ for (mut in c("Mut", "Indel", "SBS1", "SBSB", "SBSC", "mtDNA")) {
 species.data = sample.data[match(unique(sample.data$Species), sample.data$Species),
                            c("Species", "Lifespan80", "Inverse_Lifespan80",
                              "Mass", "Log10_Mass", "Litter_size", "Metabolic_rate",
-                             "Log10_Metabolic_rate")]
+                             "Log10_Metabolic_rate", "Total_genome_bp")]
 anage.idx = match(species.data$Species, anage.data$Name)
 species.data$Latin_name = gsub("familiaris", "lupus",
                                paste0(anage.data$Genus, "_", anage.data$Species)[anage.idx])
 for (mut in c("Mut", "Indel", "SBS1", "SBSB", "SBSC", "mtDNA")) {
     burden = paste0(mut, "_burden")
     rate = paste0(mut, "_rate")
+    elb = paste0(mut, "_ELB")
     species.data[, burden] = sapply(species.data$Species, function(sp) {
         mean(indiv.data[indiv.data$Species == sp, burden], na.rm=T)
     })
     species.data[, rate] = sapply(species.data$Species, function(sp) {
         mean(indiv.data[indiv.data$Species == sp, rate], na.rm=T)
     })
+    species.data[, elb] = species.data[, rate] * species.data$Lifespan80
+
 }
 rownames(sample.data) = rownames(indiv.data) = rownames(species.data) = NULL
 
@@ -233,6 +239,7 @@ rownames(sample.data) = rownames(indiv.data) = rownames(species.data) = NULL
 # Round all mutation burdens (except for mtDNA)
 for (mut in c("Mut", "Indel", "SBS1", "SBSB", "SBSC")) {
     species.data[paste0(mut, "_burden")] = round(species.data[paste0(mut, "_burden")])
+    species.data[paste0(mut, "_ELB")] = round(species.data[paste0(mut, "_ELB")])
     indiv.data[paste0(mut, "_burden")] = round(indiv.data[paste0(mut, "_burden")])
     sample.data[paste0(mut, "_burden")] = round(sample.data[paste0(mut, "_burden")])
     sample.data[paste0(mut, "_ELB")] = round(sample.data[paste0(mut, "_ELB")])
@@ -240,9 +247,12 @@ for (mut in c("Mut", "Indel", "SBS1", "SBSB", "SBSC")) {
 
 
 # Output and save burdens tables
-cat("Saving and plotting mutation burdens and rates per sample...\n")
+cat("Saving and plotting mutation burdens and rates...\n")
 write.table(sample.data[, c(1:12, 17:18, 38, 13, 20, 14:16, 19, 21:37)],
-            file=OUTPUT$TABLE, sep="\t", quote=F, row.names=F)
+            file=OUTPUT$TABLE.SAMPLE, sep="\t", quote=F, row.names=F)
+write.table(species.data[, c(1:9, 11, 14, 17, 20, 23, 26, 12, 15, 18,
+                             21, 24, 27, 13, 16, 19, 22, 25, 28)],
+            file=OUTPUT$TABLE.SPECIES, sep="\t", quote=F, row.names=F)
 save(sample.data, indiv.data, species.data, file=OUTPUT$DATA)
 
 
