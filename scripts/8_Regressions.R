@@ -904,7 +904,7 @@ for (i in 1:length(lme.rates.lifespan80)) {
 }
 
 for (i in 1:length(lme.rate.anage.single)) {
-    name = names(lme.rate.anage.single)[i]
+    name = gsub("Inverse_", "1/", names(lme.rate.anage.single)[i])
     k.est = round(intervals(lme.rate.anage.single[[i]], which="fixed")$fixed, 2)
     fve = round(lme.rate.anage.single.fve[i], 2)
     lme.coef.table = rbind(lme.coef.table,
